@@ -1,0 +1,211 @@
+<% include ./partials/header%>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <!--for centering the following div we use this div to add some space to the left-->
+        </div>
+        <div class="col-sm-7">
+            <div class="thumbnail">
+                     <% if(employee.picture && employee.picture.length>0) { %>
+                                          <img class="img-responsive" src="<%=employee.picture%>">  
+                                      <% } else { %>
+                                          <img class="img-responsive" src="/images/face_doodle.png">
+                                      <% } %>
+                    <div class="caption-full">
+                         <h4 class="pull-right">Role: <%=employee.role%></h4>
+                         <h4><a><%=employee.firstName%> <%=employee.lastName%></a></h4>
+                         <% if(employee.team && employee.team.length>0){ %>
+                             <p>
+                                 Team: <strong><%=employee.team%></strong>
+                             </p>
+                         <% } %>
+                         <% if(employee.leavingStartDate &&employee.leavingEndDate) { %>
+                             <%if(employee.leavingEndDate.toTimeString().substr(0,8)<"18:00:00"){ %>
+                                 <p>
+                                 On a leaving permission from <%=employee.leavingStartDate.toTimeString().substr(0,8)%> until <%=employee.leavingEndDate.toTimeString().substr(0,8)%>
+                                </p>
+                             <% }else{ %>
+                                 <p>
+                                 On a leaving permission from  <%=employee.leavingStartDate.toTimeString().substr(0,8)%> until tommorow
+                                 </p>
+                             <% } %>
+                         <% } %>
+                         <% if(employee.vacationStartDate && employee.vacationEndDate) { %>
+                            <p>
+                            Next planned vacation begins on: <%=employee.vacationStartDate.toString()%> and ends on: <%=employee.vacationEndDate.toString()%>
+                            </p>
+                         <% } else { %>
+                         <p>No planned vacations in the future</p>
+                         <% } %>
+                    </div>
+                      <% if(currentUser && employee._id.equals(currentUser._id)){ %>  <!--currentUser ii definit in app.js cu un app.use;daca nu exista currentUser inseamna ca nu e nimeni logat -->
+                            <a id="edit_details_button" class="btn btn-warning" href="#">Edit Details</a>
+                            <a id="profile_pic_edit" class="btn btn-warning" href="#">Edit Profile Picture</a>
+                            <a id="plan_vacation_button" class="btn btn-warning" href="#">Plan a vacation</a>
+                            <a id="plan_leaving_button" class="btn btn-warning" href="#">Leaving Permission</a>
+                            <% if(employee.vacationStartDate && employee.vacationEndDate) { %>
+                                 <form id="remove_vacation_form" action="/employees/<%=employee._id%>/vacation?_method=DELETE" method="POST" style="display:inline;">
+                                                   <button class="btn  btn-danger">Remove Vacation</button>
+                                 </form>
+                            <% }  %>
+                            <% if(employee.leavingStartDate && employee.leavingEndDate) { %>
+                                 <form id="remove_leaving_form" action="/employees/<%=employee._id%>/leaving?_method=DELETE" method="POST" style="display:inline;">
+                                                   <button class="btn btn-danger">Remove Leaving</button>
+                                 </form>
+                            <% }  %>
+                            <form id="edit_details_form" action="/employees/<%=employee._id%>/details?_method=PUT" method="POST" style="display:none">
+                                <label>Edit Details:</label>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="firstName" value="<%=employee.firstName%>">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="lastName" value="<%=employee.lastName%>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Team:</label>
+                                    <select class="form-control" name="team">
+                                        <option value="Direwolves">Direwolves</option>
+                                        <option value="Direfox">Direfox</option>
+                                        <option value="Team3">Team3</option>
+                                        <option value="Team4">Team4</option>
+                                        <option value="n/a">n/a</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Role:</label>
+                                    <select class="form-control" name="role">
+                                        <option value="Developer">Developer</option>
+                                        <option value="QA">QA</option>
+                                        <option value="Manager">Manager/Lead</option>
+                                    </select>
+                                </div>
+                                 <button class="btn btn-success">Edit Details</button>
+                            </form>
+                            <form id="profile_pic_edit_form" action="/employees/<%=employee._id%>/picture?_method=PUT" method="POST" enctype="multipart/form-data" style="display:none;">
+                                    <div class="form-group">
+                                    <label>Upload a picture: </label>
+                                    <input class="form-control" id="file" type="file" name="file">
+                                     <span class="hint">Supported files: jpg, jpeg, png.</span>
+                                    </div>
+                                <button class="btn btn-danger">Update Picture</button>
+                            </form>
+                            <form id="vacation_edit_form" action="/employees/<%=employee._id%>/vacation?_method=PUT" method="POST" enctype="multipart/form-data" style="display:none;">
+                                    <div class="form-group">
+                                    <label>Set Start Date of Vacation:</label>
+                                    <input class="form-control" id="startVacation" type="date" name="vacationStartDate">
+                                    </div>
+                                    <div class="form-group">
+                                    <label>Set Start End of Vacation:</label>
+                                    <input class="form-control" id="startVacation" type="date" name="vacationEndDate">
+                                    </div>
+                                    <button class="btn btn-danger">Plan Vacation</button>
+                            </form>
+                            <form id="leaving_edit_form" action="/employees/<%=employee._id%>/leaving?_method=PUT" method="POST" style="display:none;">
+                                    <div class="form-group">
+                                    <label>Set Start Hour of Leaving Permission:</label>
+                                    <input class="form-control" id="startLeaving" type="time" step="1" name="leavingStartTime" value="<%=(new Date(Date.now())).toISOString().substr(11, 8)%>">
+                                    <span class="hint">Time format is: HH:MM:SS AM/PM.</span>
+                                    </div>
+                                    <div class="form-group">
+                                    <label>Set Start End Hour:</label>
+                                    <input class="form-control" id="endLeaving" type="time" step="1" name="leavingEndTime">
+                                    <span class="hint">Time format is: HH:MM:SS AM/PM.</span>
+                                    </div>
+                                    <button id="LeavingSubmitButton"class="btn btn-danger" disabled="true">Submit Leaving Permission</button>
+                            </form>
+                            
+                            
+                    <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var profile_pic_edit = document.getElementById("profile_pic_edit");
+    var profile_pic_edit_form = document.getElementById("profile_pic_edit_form");
+    var profile_pic_edit_form_isHidden=true;
+    if(profile_pic_edit && profile_pic_edit_form) {
+    profile_pic_edit.addEventListener("click",function(){
+            if(profile_pic_edit_form_isHidden){
+                profile_pic_edit_form.style.display="block";
+                profile_pic_edit_form_isHidden=false;
+                profile_pic_edit.textContent="Hide Profile Picture Form";
+            } else {
+                profile_pic_edit_form.style.display="none";
+                profile_pic_edit_form_isHidden=true;
+                 profile_pic_edit.textContent="Edit Profile Picture";
+            }
+    });
+    }
+  
+    var plan_vacation_button = document.getElementById("plan_vacation_button");
+    var vacation_edit_form = document.getElementById("vacation_edit_form");
+    var vacation_edit_form_isHidden=true;
+      if(plan_vacation_button && vacation_edit_form) {
+    plan_vacation_button.addEventListener("click",function(){
+            if(vacation_edit_form_isHidden){
+                vacation_edit_form.style.display="block";
+                vacation_edit_form_isHidden=false;
+                plan_vacation_button.textContent="Hide Vacation Plan Form";
+            } else {
+                vacation_edit_form.style.display="none";
+                vacation_edit_form_isHidden=true;
+                 plan_vacation_button.textContent="Plan a Vacation";
+            }
+    });
+    }
+    
+    var plan_leaving_button = document.getElementById("plan_leaving_button");
+    var leaving_edit_form = document.getElementById("leaving_edit_form");
+    var leaving_edit_form_isHidden=true;
+    if(plan_leaving_button && leaving_edit_form) {
+    plan_leaving_button.addEventListener("click",function(){
+            if(leaving_edit_form_isHidden){
+                leaving_edit_form.style.display="block";
+                leaving_edit_form_isHidden=false;
+                plan_leaving_button.textContent="Hide Leaving Permission Form";
+            } else {
+                leaving_edit_form.style.display="none";
+                leaving_edit_form_isHidden=true;
+                 plan_leaving_button.textContent="Leaving Permission";
+            }
+    });
+    }
+  
+    var startLeaving = document.getElementById("startLeaving");
+    var endLeaving = document.getElementById("endLeaving");
+    var LeavingSubmitButton= document.getElementById("LeavingSubmitButton");
+      if(startLeaving && endLeaving) {
+    startLeaving.addEventListener("change",function(){
+        if(startLeaving.value && endLeaving.value && endLeaving.value>startLeaving.value)
+        {
+            LeavingSubmitButton.disabled=false;
+        } else {
+           LeavingSubmitButton.disabled=true;
+        }
+    });
+    endLeaving.addEventListener("change",function(){
+        if(startLeaving.value && endLeaving.value && endLeaving.value>startLeaving.value)
+        {
+            LeavingSubmitButton.disabled=false;
+        } else {
+           LeavingSubmitButton.disabled=true;
+        }
+    });
+      }
+      var edit_details_button =document.getElementById("edit_details_button");
+      var edit_details_form = document.getElementById("edit_details_form");
+      var edit_details_form_isHidden=true;
+      edit_details_button.addEventListener("click",function(){
+         if(edit_details_form_isHidden){
+             edit_details_form.style.display="block";
+             edit_details_form_isHidden=false;
+             edit_details_button.textContent="Hide Details";
+         } else {
+             edit_details_form.style.display="none";
+             edit_details_form_isHidden=true;
+             edit_details_button.textContent="Edit Details";
+         }
+      });
+</script>
+<% include ./partials/footer%>

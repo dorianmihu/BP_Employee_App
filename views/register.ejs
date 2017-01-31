@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>BearingPoint Employee Vacation Management App</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <link rel="stylesheet" href="/stylesheets/main.css">
+        
+    </head>
+    <body>
+        <div class="container">
+          <% if(error && error.length>0){ %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+          <div class="alert alert-danger" role="alert">
+              <%=error%>
+          </div> <!--message from the flash-->
+          <% } else if(success && success.length>0) { %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+          <div class="alert alert-success" role="alert">
+              <%=success%>
+          </div> <!--message from the flash-->  
+          <% } %>
+        </div>
+        <div class="container">
+            <div class="row">
+            <h3 style="text-align:center">Register as a new <span><img src="/images/logo-bearingpoint.png"></span> employee</h3>
+                <div style="width:30%; margin: 25px auto;">
+                <form action="/register" method="POST">
+                    <div class="form-group">
+                    <input class="form-control" type="text" name="username" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                    <input class="form-control" id="password1" type="password" name="password" placeholder="password">
+                    </div>
+                    <div class="form-group">
+                    <input class="form-control" id="password2" data-toggle="tooltip" title="" type="password" name="password2" placeholder="Retype password">
+                    </div>
+                    <div class="form-group">
+                    <input class="form-control" type="text" name="firstName" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                    <input class="form-control" type="text" name="lastName" placeholder="Last Name">
+                    </div>
+                   <div class="form-group">
+                    <label>Team:</label>
+                    <select class="form-control" name="team">
+                        <option value="Direwolves">Direwolves</option>
+                        <option value="Direfox">Direfox</option>
+                        <option value="Team3">Team3</option>
+                        <option value="Team4">Team4</option>
+                        <option value="n/a">n/a</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <label>Role:</label>
+                    <select class="form-control" name="role">
+                        <option value="Developer">Developer</option>
+                        <option value="QA">QA</option>
+                        <option value="Manager">Manager/Lead</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <button id="submit_button"  class="btn btn-large btn-success" type="submit">Sign Up!</button>
+                    </div>
+                </form>
+                <a href="/">Back to Log In</a>
+                </div>
+            </div>
+        </div>
+        <script>
+           var pass1 = document.getElementById("password1");
+           var pass2 = document.getElementById("password2");
+           var submit_button = document.getElementById("submit_button");
+           submit_button.disabled=true;
+           pass1.addEventListener("keyup",function(){
+                   if(pass1.value != pass2.value){
+                       pass1.style.color="red";
+                       pass2.style.color="red";
+                       pass1.setAttribute("title","Passwords do not match");
+                       pass2.setAttribute("title","Passwords do not match");
+                       submit_button.disabled=true;
+                   } else if(pass1.value === pass2.value){
+                       pass1.style.color="green";
+                       pass2.style.color="green";
+                      submit_button.disabled=false;
+                       pass1.setAttribute("title","");
+                       pass2.setAttribute("title","");
+                   }
+           });
+           pass2.addEventListener("keyup",function(){
+                   if(pass1.value != pass2.value){
+                       pass1.style.color="red";
+                       pass2.style.color="red";
+                       pass2.setAttribute("title","Passwords do not match");
+                       pass1.setAttribute("title","Passwords do not match");
+                       submit_button.disabled=true;
+                   } else if(pass1.value === pass2.value){
+                       pass1.style.color="green";
+                       pass2.style.color="green";
+                      submit_button.disabled=false;
+                       pass2.setAttribute("title","");
+                       pass1.setAttribute("title","");
+                   }
+           });
+           submit_button.disabled = pass1.value === pass2.value ? true:false;
+        </script>
+    </body>
+</html>

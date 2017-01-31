@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>BearingPoint Employee Vacation Management App</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script
+                  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+                  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+                  crossorigin="anonymous"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/stylesheets/main.css">
+        <!-- Latest compiled and minified JavaScript -->
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container fluid">
+                  <div class="navbar-header">
+                        <a class="navbar-brand" href="/">
+                            <img alt="BearingPoint" src="/images/logo-bearingpoint.png">
+                        </a>
+                  </div>
+                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                      <ul class="nav navbar-nav">
+                          <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter By<span class="caret"></span></a>
+                              <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                                  <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Team</a>
+                                    <ul class="dropdown-menu">
+                                      <li><a tabindex="-1" href="/employees/team/Direwolves">Direwolves</a></li>
+                                    <!--<li class="dropdown-submenu">
+                                        <a href="#">Even More..</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">3rd level</a></li>
+                                        	<li><a href="#">3rd level</a></li>
+                                        </ul>
+                                      </li>-->
+                                      <li><a href="/employees/team/Direfox">Direfox</a></li>
+                                      <li><a href="/employees/team/Team3">Team3</a></li>
+                                      <li><a href="/employees/team/Team4">Team4</a></li>
+                                      <li><a href="/employees/team/na">n/a</a></li>
+                                    </ul>
+                                  </li>
+                                  <li class="divider"></li>
+                                  <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="#">Role</a>
+                                    <ul class="dropdown-menu">
+                                      <li><a tabindex="-1" href="/employees/role/Developer">Developer</a></li>
+                                      <li><a href="/employees/role/QA">QA</a></li>
+                                      <li><a href="/employees/role/Manager">Manager/Lead</a></li>
+                                    </ul>
+                                  </li>
+                                </ul>
+                          </li>
+                      </ul>
+                      <form class="navbar-form navbar-left" action="/employees/search" method="POST">
+                        <div class="form-group">
+                          <input type="text" class="form-control" name="searchTerm"placeholder="Search by name">
+                        </div>
+                        <button type="submit" class="btn btn-default">Search</button>
+                      </form>
+                      <div class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                  <li class="navbar-text">Signed in as: <%=currentUser.username%> (<%=currentUser.firstName%> <%=currentUser.lastName%>)</li>
+                                  <li><a href="/logout">Logout</a></li>
+                            </ul>
+                      </div>
+                  </div><!-- /.navbar-collapse -->
+            </div>
+        </nav>
+        <div class="container">
+          <% if(error && error.length>0){ %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+          <div class="alert alert-danger" role="alert">
+              <%=error%>
+          </div> <!--message from the flash-->
+          <% } else if(success && success.length>0) { %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+          <div class="alert alert-success" role="alert">
+              <%=success%>
+          </div> <!--message from the flash-->  
+          <% } %>
+        </div>
+        

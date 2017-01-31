@@ -1,0 +1,62 @@
+<% include ./partials/header%>
+<div class="container">
+    <div class="row text-center" style="display:flex; flex-wrap:wrap;" >
+                 <%employees.forEach(function(employee){ %>
+                        <div class="col-md-3 col-sm-6">
+                              <div class="thumbnail">
+                                  <% if(employee.picture && employee.picture.length>0) { %>
+                                      <img class="employee_image" src="<%=employee.picture%>"> 
+                                  <% } else { %>
+                                      <img class="employee_image" src="/images/face_doodle.png">
+                                  <% } %>
+                                  <% if(employee.onLeaving){ %>
+                                      <div class="caption post-content"> 
+                                              <div class="details">
+                                                <h3>Leaving Permission</h3>
+                                                <%if(employee.leavingEndDate.toTimeString().substr(0,8)<"18:00:00"){ %>
+                                                     <p>
+                                                      until <%=employee.leavingEndDate.toTimeString().substr(0,8)%>
+                                                    </p>
+                                                 <% }else{ %>
+                                                     <p>
+                                                      until tommorow
+                                                     </p>
+                                                <% } %>
+                                              </div>
+                                        </div>
+                                  <% } else if(employee.onVacation){ %>
+                                          <div class="caption post-content">
+                                                  <div class="details">
+                                                    <h3>On Vacation</h3>
+                                                    <%if(employee.vacationEndDate.toDateString()){ %>
+                                                         <p>
+                                                          until <%=employee.vacationEndDate.toDateString()%>
+                                                        </p>
+                                                    <% } %>
+                                                  </div>
+                                            </div> 
+                                  <% } %>
+                                      <div class="caption">
+                                            <h4><%=employee.firstName%> <%=employee.lastName%></h4>
+                                      </div>
+                                  <p>
+                                    <a href="/employees/<%=employee._id%>" class="btn btn-primary" stlye="z-index: 3;">More Info</a>
+                                  </p>
+                              </div>
+                   </div>
+                  <% });%>
+    </div>
+</div>
+<script>
+   var images=document.getElementsByClassName("col-md-3 col-sm-6");
+   var image_effects=document.getElementsByClassName("caption post-content");
+   console.log(images.length);
+   console.log(images[0].getBoundingClientRect());
+   for (i = 0; i < images.length; i++) { 
+   console.log(images[i].offsetheight);
+}
+    window.setTimeout(function(){
+        location.reload();
+    },60000);
+</script>
+<% include ./partials/footer%>

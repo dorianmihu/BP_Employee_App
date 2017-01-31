@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>BearingPoint Employee Vacation Management App</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/stylesheets/login.css">
+    </head>
+    <body>
+      <!--  <div class="container" style="width:30%; margin-top: 50px; margin-bottom:0px;">
+            
+        </div>-->
+        <div class="container1">
+            <div style="width:30%; margin: 25px auto;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <img alt="BearingPoint" src="/images/logo-bearingpoint.png">
+                        <% if(error && error.length>0){ %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+                          <div class="alert alert-danger" role="alert">
+                              <%=error%>
+                          </div> <!--message from the flash-->
+                          <% } else if(success && success.length>0) { %> <!--trebuie sa verificam si ca lungimea stringului e mai mare ca 0, fiindca puteam avea cazul cand error exista ca si array gol;-->
+                          <div class="alert alert-success" role="alert">
+                              <%=success%>
+                          </div> <!--message from the flash-->  
+                        <% } %>
+                    </div>
+                    <div class="panel-body">
+                        <form action="/login" method="POST">
+                             <div class="form-group">
+                                <input class="form-control" type="text" name="username" placeholder="username">
+                            </div>
+                             <div class="form-group">
+                                <input class="form-control" type="password" name="password" placeholder="password">
+                            </div>
+                             <div class="form-group">
+                                <input class="btn btn-large btn-danger" type="submit" value="Log in!">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer"><a href="/register">New User? Please Register</a></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
