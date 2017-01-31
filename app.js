@@ -87,6 +87,19 @@ app.get("/",middleware.isLoggedIn, function(req,res){
     
 });
 
+//SHOW ALL PLANNED VACATIONS ROUTE
+app.get("/vacations",middleware.isLoggedIn,function(req, res) {
+    Employee.find({vacationStartDate:{$ne:null},vacationStartDate:{$ne:null}},function(err, foundEmployees) {
+            if(err){
+                console.log(err);
+                req.flash("error","There was an error "+err.message);
+                res.render("/");
+            } else {
+                res.render("vacations",{employees:foundEmployees});
+            }
+    });
+    
+});
 //search route
 app.post("/employees/search",middleware.isLoggedIn,function(req,res){
     /*res.send(req.body.searchTerm);*/
@@ -201,7 +214,6 @@ app.get("/employees/team/:id",middleware.isLoggedIn,function(req, res) {
 });
 //SHOW BY ROLE
 app.get("/employees/role/:id",middleware.isLoggedIn,function(req, res) {
-        
         if(req.params.id==="Manager") {
             Employee.find({role:"Manager"},function(err, foundEmployees) { //aici era inainte "Manager/Lead" in loc de doar "Manager"
                      if(err){
@@ -279,12 +291,14 @@ app.put("/employees/:id/picture", middleware.checkEmployeeOwnership, middleware.
              } else {
                  var path1 =__dirname
                  console.log("Path1 "+path1);
-                 var oldPicturePath=path1+"/public/"+employee.picture;
-                 console.log("Old Pic path is: "+oldPicturePath);
-                 //We Delete the Old file if a new file is provided
-                 if(oldPicturePath && oldPicturePath.length>0 && req.picturePath &&req.picturePath.length>0 ){
-                        fs.unlinkSync(oldPicturePath);
-                    }
+                 if(employee.picture && employee.picture.length>0){
+                     var oldPicturePath=path1+"/public/"+employee.picture;
+                     console.log("Old Pic path is: "+oldPicturePath);
+                     //We Delete the Old file if a new file is provided
+                     if(oldPicturePath && oldPicturePath.length>0 && req.picturePath &&req.picturePath.length>0 ){
+                            fs.unlinkSync(oldPicturePath);
+                        }
+                 }
                  
              }
           });
@@ -341,9 +355,9 @@ app.put("/employees/:id/leaving", middleware.checkEmployeeOwnership, function(re
                 console.log(err);
                 req.flash("error","There was an error: "+err.message);
             } else {
-                //console.log(employeeUpdated);
                 req.flash("success","Leaving Permission Added");
                 res.redirect("/");
+                
             }
     });
 });

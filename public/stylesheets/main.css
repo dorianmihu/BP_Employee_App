@@ -84,3 +84,7 @@ body{
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+.img-responsive{width:100%;}
+.img-responsive-2 { 
+   width: 100%; 
+}

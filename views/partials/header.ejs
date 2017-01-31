@@ -23,6 +23,7 @@
                   </div>
                   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                       <ul class="nav navbar-nav">
+                          <li class="active"><a href="/employees/<%=currentUser.id%>">Edit Profile</a></li>
                           <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter By<span class="caret"></span></a>
                               <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
@@ -52,6 +53,8 @@
                                       <li><a href="/employees/role/Manager">Manager/Lead</a></li>
                                     </ul>
                                   </li>
+                                   <li class="divider"></li>
+                                  <li><a href="/vacations">Planned Vacations</a></li>
                                 </ul>
                           </li>
                       </ul>

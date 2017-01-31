@@ -32,7 +32,7 @@
                          <% } %>
                          <% if(employee.vacationStartDate && employee.vacationEndDate) { %>
                             <p>
-                            Next planned vacation begins on: <%=employee.vacationStartDate.toString()%> and ends on: <%=employee.vacationEndDate.toString()%>
+                            Next planned vacation begins on: <%=employee.vacationStartDate.toDateString()%> and ends on: <%=employee.vacationEndDate.toDateString()%>
                             </p>
                          <% } else { %>
                          <p>No planned vacations in the future</p>
@@ -50,7 +50,16 @@
                             <% }  %>
                             <% if(employee.leavingStartDate && employee.leavingEndDate) { %>
                                  <form id="remove_leaving_form" action="/employees/<%=employee._id%>/leaving?_method=DELETE" method="POST" style="display:inline;">
-                                                   <button class="btn btn-danger">Remove Leaving</button>
+                                                   <div class="form-group">
+                                                   <label>Select Person to whom you've sent the leaving permission:</label>
+                                                    <select class="form-control" id="personOfInterestCancel"name="personOfInterestCancel">
+                                                        <option value="tiberiu.csefko@bearingpoint.com">Tiberiu Csefko</option>
+                                                        <option value="corneliu.bogdan@bearingpoint.com">Corneliu Bogdan</option>
+                                                        <option value="thomas.stranner@infonova.com">Thomas Stranner</option>
+                                                        <option value="dorian.mihu@gmail.com">Dorian Mihu</option>
+                                                    </select>
+                                                    </div>
+                                                   <button id="remove_leaving_button" class="btn btn-danger">Remove Leaving</button>
                                  </form>
                             <% }  %>
                             <form id="edit_details_form" action="/employees/<%=employee._id%>/details?_method=PUT" method="POST" style="display:none">
@@ -96,9 +105,9 @@
                                     </div>
                                     <div class="form-group">
                                     <label>Set Start End of Vacation:</label>
-                                    <input class="form-control" id="startVacation" type="date" name="vacationEndDate">
+                                    <input class="form-control" id="endVacation" type="date" name="vacationEndDate">
                                     </div>
-                                    <button class="btn btn-danger">Plan Vacation</button>
+                                    <button class="btn btn-danger" id="submit_vacation_button"disabled="true">Plan Vacation</button>
                             </form>
                             <form id="leaving_edit_form" action="/employees/<%=employee._id%>/leaving?_method=PUT" method="POST" style="display:none;">
                                     <div class="form-group">
@@ -107,14 +116,21 @@
                                     <span class="hint">Time format is: HH:MM:SS AM/PM.</span>
                                     </div>
                                     <div class="form-group">
-                                    <label>Set Start End Hour:</label>
+                                    <label>Set End Hour:</label>
                                     <input class="form-control" id="endLeaving" type="time" step="1" name="leavingEndTime">
                                     <span class="hint">Time format is: HH:MM:SS AM/PM.</span>
                                     </div>
+                                    <div class="form-group">
+                                    <label>Select Person to inform:</label>
+                                    <select class="form-control" id="personOfInterest"name="personOfInterest">
+                                        <option value="tiberiu.csefko@bearingpoint.com">Tiberiu Csefko</option>
+                                        <option value="corneliu.bogdan@bearingpoint.com">Corneliu Bogdan</option>
+                                        <option value="thomas.stranner@infonova.com">Thomas Stranner</option>
+                                        <option value="dorian.mihu@gmail.com">Dorian Mihu</option>
+                                    </select>
+                                    </div>
                                     <button id="LeavingSubmitButton"class="btn btn-danger" disabled="true">Submit Leaving Permission</button>
                             </form>
-                            
-                            
                     <% } %>
             </div>
         </div>
@@ -155,6 +171,25 @@
     });
     }
     
+    var startVacation = document.getElementById("startVacation");
+    var endVacation = document.getElementById("endVacation");
+    var submit_vacation_button = document.getElementById("submit_vacation_button");
+    startVacation.addEventListener("change",function(){
+           if(startVacation.value && endVacation.value && startVacation.value<=endVacation.value){
+             submit_vacation_button.disabled=false;
+           } else {
+               submit_vacation_button.disabled=true;
+           }
+    });
+    endVacation.addEventListener("change",function(){
+           if(startVacation.value && endVacation.value && startVacation.value<=endVacation.value){
+                 submit_vacation_button.disabled=false;
+           } else {
+               submit_vacation_button.disabled=true;
+           }
+    });
+    
+    
     var plan_leaving_button = document.getElementById("plan_leaving_button");
     var leaving_edit_form = document.getElementById("leaving_edit_form");
     var leaving_edit_form_isHidden=true;
@@ -192,6 +227,34 @@
            LeavingSubmitButton.disabled=true;
         }
     });
+    LeavingSubmitButton.addEventListener("click",function(){
+        var mailingString="mailto:";
+        var e = document.getElementById("personOfInterest");
+        var strUser = e.options[e.selectedIndex].value;
+        mailingString+=strUser;
+        mailingString+="?subject=Leaving%20Permission&body=";
+        var emailBody= "Hello,\nI would like to request a leaving permission today from "+startLeaving.value;
+        emailBody+=" until "+endLeaving.value;
+        emailBody+=".\n Thank you!";
+        mailingString+=emailBody;
+        alert("A new window should open after you close this alert and the email client should pop up. If this does not happen then you have to send the email to "+strUser+" manually");
+        window.open(mailingString);
+
+    });
+      }
+      var remove_leaving_button = document.getElementById("remove_leaving_button");
+      if(remove_leaving_button && remove_leaving_button.style.display!="none") {
+          remove_leaving_button.addEventListener("click",function(){
+                   var mailingString="mailto:";
+                    var e = document.getElementById("personOfInterestCancel");
+                    var strUser = e.options[e.selectedIndex].value;
+                    mailingString+=strUser;
+                    mailingString+="?subject=Leaving%20Permission&body=";
+                    var emailBody= "Hello,\nI would like to cancel my previously requested leaving permission. Sorry for the spam and thank you!";
+                    mailingString+=emailBody;
+                    alert("A new window should open after you close this alert and the email client should pop up. If this does not happen then you have to send the email to "+strUser+" manually");
+                    window.open(mailingString);           
+          });
       }
       var edit_details_button =document.getElementById("edit_details_button");
       var edit_details_form = document.getElementById("edit_details_form");

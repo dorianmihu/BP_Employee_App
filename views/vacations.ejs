@@ -1,0 +1,48 @@
+<% include ./partials/header %>
+<div class="container">
+	<div class="row">
+        <table class="table table-striped">
+             <thead>
+                    <tr>
+                        <th style="width:5%;">Picture</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Team</th>
+                        <th>Vacation Start Date</th>
+                        <th>Vacation End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%employees.forEach(function(employee){ %>
+                           <tr class="listview">
+                               <td class="picture_container" style="padding:5px 0px 5px 0px;">
+                                    <a>
+                                       <img class="img-responsive img-responsive-2" src="<%=employee.picture%>">
+                                    </a>
+                               </td>
+                               <td>
+                                   <%=employee.firstName%>
+                               </td>
+                               <td>
+                                   <%=employee.lastName%>
+                               </td>
+                               <td>
+                                   <%=employee.role%>
+                               </td>
+                               <td>
+                                   <%=employee.team%>
+                               </td>
+                               <td>
+                                   <%=employee.vacationStartDate.toDateString()%>
+                               </td>
+                               <td>
+                                   <%=employee.vacationEndDate.toDateString()%>
+                               </td>
+                           </tr> 
+                    <% }); %>
+                </tbody>
+        </table>
+	</div>
+</div>
+<% include ./partials/footer %>
